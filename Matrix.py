@@ -68,7 +68,7 @@ class Matrix:
                     result[i, j] = self[i, j] - other[i, j]
             return result
         else:
-            raise ValueError("Matrices of different dimensions cannot be subtracted")
+            raise ValueError("Matrices of different dimensions cannot be subtracted",self.m,self.m,other.m,other.n)
 
     def __mul__(self, other):
         if isinstance(other, (int, float)):
@@ -142,6 +142,9 @@ class Matrix:
     def untail(m):
        return Matrix(m.m,m.n-1,[m.data[i] for i in range(len(m.data))  if i%m.n != m.n-1])
     
+    def tail(m):
+       return Matrix(m.m,m.n+1,[(m.data[i * m.n + j] if j != m.n else 1) for i in range(m.m) for j in range(m.n+1)  ])
+    
     
     
     
@@ -152,3 +155,25 @@ class Matrix:
             row_str = " ".join(str(self[i, j]) for j in range(self.n))
             output += row_str + "\n"
         return output
+    
+    def save_file(self, filename):
+        with open(filename, 'w', encoding='utf-8') as file:
+            file.write(f"{self.m} {self.n}\n")
+            for i in range(self.m):
+                for j in range(self.n):
+                    file.write(str(self.data[i * self.n + j]) + ' ')
+                file.write('\n')
+
+    @classmethod
+    def load_file(cls, filename):
+        with open(filename, 'r', encoding='utf-8') as file:
+            rows, cols = map(int, file.readline().split())
+            data = []
+            for _ in range(rows):
+                row = list(map(float, file.readline().split()))
+                data.extend(row)
+            return cls(rows, cols, data)
+
+
+
+

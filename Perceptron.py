@@ -4,16 +4,25 @@ import random
 class Perceptron:
     def __init__(self, input_size, output_size):
       # each row is an input or an output
-        self.weights = Matrix(input_size, output_size,  [random.random() for _ in range(input_size * output_size)])  # Initialize weights randomly
-        self.bias = Matrix( 1,output_size, [random.random() for _ in range(output_size)])  # Initialize biases randomly
+        self.weights = Matrix(input_size+1, output_size+1,  [random.random() for _ in range((input_size+1) * (output_size+1))])  # Initialize weights randomly
+        #self.bias = Matrix( 1,output_size, [random.random() for _ in range(output_size)])  # Initialize biases randomly
 
     def predict(self, inputs):
         # Weighted sum of inputs with weights plus biases
-        result = inputs * self.weights  + self.bias.repeat_vertically(inputs.m)
+        tail=False
+        if inputs.n==self.weights.m-1:
+            result = Matrix.untail(Matrix.tail(inputs) * self.weights)
+        else:
+            result = inputs * self.weights
+        #result = inputs * self.weights # + self.bias.repeat_vertically(inputs.m)
         # Apply activation function (in this case, step function)
         return result#Matrix(result.m, result.n, [[1 if val > 0 else 0 for val in row] for row in result.data])
 
     def train(self, inputs, labels, learning_rate=0.01, epochs=1):
+        if inputs.n==self.weights.m-1:
+            inputs=Matrix.tail(inputs)
+        if labels.n==self.weights.n-1:
+            labels=Matrix.tail(labels)
         for epoch in range(epochs):
             # Make a prediction
             predictions = self.predict(inputs)
@@ -23,8 +32,8 @@ class Perceptron:
             # Update weights and biases using error and learning rate
             self.weights += inputs.T() * error * learning_rate
             #print('train',inputs,labels,predictions,self.weights)
-            for i in range(error.m):
-                self.bias += error[i:i+1,:] * learning_rate
+            #for i in range(error.m):
+            #    self.bias += error[i:i+1,:] * learning_rate
 
 if __name__ == "__main__":
     from Car import Car
@@ -36,13 +45,13 @@ if __name__ == "__main__":
     
     perceptron = Perceptron(input_size=7, output_size=2)
     
-    history_max=1000
-    history_write_index=0
-    history_inputs = Matrix(history_max,7)# 7 sensors
-    history_labels = Matrix(history_max,2)# v_i, v_d
+    #history_max=1000
+    #history_write_index=0
+    #history_inputs = Matrix(history_max,7)# 7 sensors
+    #history_labels = Matrix(history_max,2)# v_i, v_d
     
-    error=1000
-    error_umbral=1
+    #error=1000
+    #error_umbral=1
     
     train=True
     repeat=True
@@ -68,10 +77,10 @@ if __name__ == "__main__":
         train=not(train)
         print('train: ',train)
         
-    def loop(event):
-        global repeat
-        print('loop')
-        repeat=False
+    #def loop(event):
+    #    global repeat
+    #    print('loop')
+    #    repeat=False
 
 
     # Crear las teclas para subir y bajar la velocidad de cada rueda
@@ -80,7 +89,7 @@ if __name__ == "__main__":
     master.bind("<KeyPress-w>", aumentar_velocidad_derecha)
     master.bind("<KeyPress-s>", disminuir_velocidad_derecha)
     master.bind("<Return>", enter)
-    master.bind("<space>", loop)
+    #master.bind("<space>", loop)
 
     
     
