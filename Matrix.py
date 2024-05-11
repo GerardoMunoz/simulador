@@ -1,3 +1,6 @@
+#ToDo
+#+=, ..., tail ver
+
 import array
 import random
 from math import cos,sin
@@ -59,6 +62,8 @@ class Matrix:
         else:
             raise ValueError("Matrices of different dimensions cannot be added",self.m,self.m,other.m,other.n)
 
+
+
     def __sub__(self, other):
         #print('sub',self.m,self.n,other.m,other.n)
         if isinstance(other, Matrix) and self.n == other.n and self.m == other.m:
@@ -69,6 +74,15 @@ class Matrix:
             return result
         else:
             raise ValueError("Matrices of different dimensions cannot be subtracted",self.m,self.m,other.m,other.n)
+
+
+    def add_tail(self, other):
+        return (self.untail() + other.untail()).tail()
+
+    def sub_tail(self, other):
+        return (self.untail() - other.untail()).tail()
+
+
 
     def __mul__(self, other):
         if isinstance(other, (int, float)):
