@@ -16,7 +16,7 @@ class Perceptron:
             result = inputs * self.weights
         return result
 
-    def train(self, inputs, labels, learning_rate=0.01, epochs=1):
+    def train(self, inputs, labels, learning_rate=0.1, epochs=1):
         if inputs.n==self.weights.m-1:
             inputs=Matrix.tail(inputs)
         if labels.n==self.weights.n-1:
@@ -25,7 +25,7 @@ class Perceptron:
             predictions = self.predict(inputs)
             
             error = labels - predictions
-            self.weights=self.weights.add_tail(  inputs.T() * error * learning_rate)
+            self.weights+=self.weights.add_tail(  inputs.T() * error * learning_rate)
             
     def save_file(self,name):
         self.weights.save_file(name)
