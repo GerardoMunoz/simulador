@@ -1,3 +1,7 @@
+# This code demonstrates the general idea of using reinforcement learning with two perceptrons, but it has some bugs.
+# The exercise involves implementing an example using reinforcement learning and fixing the bugs.
+
+
 from Matrix import Matrix
 from Perceptron import Perceptron
 import array
